@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "930500309867",
+    "firebase_url": "https://quanliphonghoc-default-rtdb.firebaseio.com",
+    "project_id": "quanliphonghoc",
+    "storage_bucket": "quanliphonghoc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930500309867:android:47b584146d1f4656acd22e",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK3JDDhMXLLtKu5IcnZIli0oPbcGg0DjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
