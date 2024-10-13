@@ -202,21 +202,86 @@ const History: React.FC = ({ navigation }: any) => {
     </SafeAreaView>
   );
 };
-
-// New Intermediate Screen
 const IntermediateScreen: React.FC = ({ navigation }: any) => {
+  const [selectedClass, setSelectedClass] = useState<string | null>(null);
+
+  const handleEmptyPress = (className: string) => {
+    setSelectedClass(className);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>DANH SÁCH LỚP HỌC:</Text>
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => navigation.navigate('DAKTNC')}
-      >
-        <Text style={styles.loginButtonText}>DHDTMT17B</Text>
-      </TouchableOpacity>
+
+      {/* Nút Button thêm mới */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => navigation.navigate('DAKTNC')}
+        >
+          <Text style={styles.classButtonText}>DHDTMT17B</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 2')}
+        >
+          <Text style={styles.classButtonText}>Class 2</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 3')}
+        >
+          <Text style={styles.classButtonText}>Class 3</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 4')}
+        >
+          <Text style={styles.classButtonText}>Class 4</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 5')}
+        >
+          <Text style={styles.classButtonText}>Class 5</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 6')}
+        >
+          <Text style={styles.classButtonText}>Class 6</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 7')}
+        >
+          <Text style={styles.classButtonText}>Class 7</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.classButton}
+          onPress={() => handleEmptyPress('Class 8')}
+        >
+          <Text style={styles.classButtonText}>Class 8</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Hiển thị "Empty" nếu nhấn vào các nút từ Class 2 đến Class 8 */}
+      {selectedClass && (
+        <Text>{selectedClass} chưa có dữ liệu</Text>
+      )}
     </SafeAreaView>
   );
 };
+
 
 const App: React.FC = () => {
   const [email, setEmail] = useState<string>('abc@gmail.com');
@@ -229,6 +294,7 @@ const App: React.FC = () => {
       navigation.navigate('NHÓM 6 - DHDTMT17B');
     } catch (error) {
       setMessage(`Error: ${error.message}`);
+      // them thong bao dang nhap thanh cong hay that bai
     }
   };
   
@@ -403,6 +469,23 @@ const styles = StyleSheet.create({
     height: 170,
     marginBottom: 16,
     alignSelf: 'center',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  classButton: {
+    backgroundColor: '#28a745',
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  classButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
