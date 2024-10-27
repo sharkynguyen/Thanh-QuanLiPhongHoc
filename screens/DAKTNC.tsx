@@ -10,9 +10,12 @@ const DAKTNC: React.FC<{ navigation: any, route: any }> = ({ navigation, route }
   const fetchDaktncFromFirestore = async () => {
     setLoading(true);
     try {
-      const snapshot = await firestore().collection('daktnc').get();
-      const data: any[] = [];
+      const snapshot = await firestore()
+        .collection('daktnc')
+        .orderBy('TimeInOut', 'asc') // Sắp xếp theo TimeInOut từ sớm đến trễ
+        .get();
 
+      const data: any[] = [];
       snapshot.forEach(doc => {
         const entry = {
           id: doc.data().ID || '',
@@ -25,39 +28,41 @@ const DAKTNC: React.FC<{ navigation: any, route: any }> = ({ navigation, route }
         data.push(entry);
       });
 
-      // Sắp xếp dữ liệu theo timestamp từ mới đến cũ
-      data.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
-
-      const filteredData: any[] = [];
       const latestRaEntries: { [key: string]: any } = {};
+      const displayedIds: { [key: string]: boolean } = {};
+      const filteredData: any[] = [];
 
-      // Lọc ra các bản ghi "Ra" và lưu trữ bản ghi "Ra" mới nhất cho mỗi ID
+      // Xác định bản ghi "Ra" mới nhất cho mỗi ID
       data.forEach(entry => {
         if (entry.status === 'Ra') {
-          if (!latestRaEntries[entry.id] || latestRaEntries[entry.id].timestamp.seconds < entry.timestamp.seconds) {
-            latestRaEntries[entry.id] = entry;
-          }
+          latestRaEntries[entry.id] = entry; // Lưu bản ghi "Ra" mới nhất
         }
       });
 
-      // Lọc ra các bản ghi "Vào" nhưng chỉ hiển thị nếu nó có thời gian sau bản ghi "Ra" hoặc nếu không có bản ghi "Ra"
+      // Lọc các bản ghi "Vào" để chỉ hiển thị nếu có TimeInOut sau TimeInOut của bản ghi "Ra" mới nhất
       data.forEach(entry => {
         if (entry.status === 'Vào') {
           const latestRa = latestRaEntries[entry.id];
 
-          // Kiểm tra thời gian của bản ghi "Vào" với bản ghi "Ra"
-          if (!latestRa || entry.timestamp.seconds > latestRa.timestamp.seconds) {
-            // Chỉ hiển thị bản ghi "Vào" mới nhất cho mỗi ID
-            const existingEntryIndex = filteredData.findIndex(e => e.id === entry.id);
-            if (existingEntryIndex === -1) {
-              filteredData.push(entry);  // Thêm vào nếu chưa có ID này
-            } else if (filteredData[existingEntryIndex].timestamp.seconds < entry.timestamp.seconds) {
-              // Cập nhật bản ghi "Vào" mới nhất nếu đã tồn tại ID
-              filteredData[existingEntryIndex] = entry;
+          // Nếu không có bản ghi "Ra", hiển thị bản ghi "Vào"
+          if (!latestRa) {
+            if (!displayedIds[entry.id]) {
+              filteredData.push(entry);
+              displayedIds[entry.id] = true; // Đánh dấu ID này đã được hiển thị
+            }
+          } else {
+            // Nếu có bản ghi "Ra", chỉ hiển thị nếu TimeInOut "Vào" lớn hơn "Ra"
+            if (entry.timeInOut > latestRa.timeInOut) {
+              if (!displayedIds[entry.id]) {
+                filteredData.push(entry);
+                displayedIds[entry.id] = true; // Đánh dấu ID này đã được hiển thị
+              }
             }
           }
         }
       });
+
+      // Không thêm bản ghi "Ra" vào dữ liệu hiển thị
 
       setDaktnc(filteredData);
     } catch (error) {
@@ -70,7 +75,6 @@ const DAKTNC: React.FC<{ navigation: any, route: any }> = ({ navigation, route }
   useEffect(() => {
     fetchDaktncFromFirestore();
 
-    // Set active button if coming from History
     if (route.params?.fromHistory) {
       setActiveButton('DHDTMT17B');
     }
@@ -78,7 +82,7 @@ const DAKTNC: React.FC<{ navigation: any, route: any }> = ({ navigation, route }
 
   const handleButtonPress = (buttonName: string) => {
     if (buttonName === activeButton) {
-      fetchDaktncFromFirestore(); // Tải lại dữ liệu khi nhấn nút
+      fetchDaktncFromFirestore();
     } else {
       setActiveButton(buttonName);
       if (buttonName === 'History') {
@@ -123,6 +127,8 @@ const DAKTNC: React.FC<{ navigation: any, route: any }> = ({ navigation, route }
           <Text style={styles.buttonText}>History</Text>
         </TouchableOpacity>
       </View>
+
+      
     </SafeAreaView>
   );
 };

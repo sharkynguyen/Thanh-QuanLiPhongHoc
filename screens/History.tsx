@@ -5,16 +5,24 @@ import firestore from '@react-native-firebase/firestore';
 const History: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [daktnc, setDaktnc] = useState<any[]>([]);
   const [activeButton, setActiveButton] = useState<string>('History');
-  const [loading, setLoading] = useState<boolean>(true); // Biến để theo dõi trạng thái tải dữ liệu
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchHistoryFromFirestore = async () => {
     setLoading(true); // Bắt đầu tải dữ liệu
     try {
-      const snapshot = await firestore().collection('daktnc').get();
+      const snapshot = await firestore()
+        .collection('daktnc')
+        .orderBy('TimeInOut', 'asc') // Sắp xếp theo TimeInOut từ sớm đến trễ
+        .get();
       const data: any[] = [];
 
       snapshot.forEach(doc => {
-        const entry = { id: doc.data().ID || '', name: doc.data().Name || '', timeInOut: doc.data().TimeInOut || '', status: doc.data().Status || '' };
+        const entry = {
+          id: doc.data().ID || '',
+          name: doc.data().Name || '',
+          timeInOut: doc.data().TimeInOut || '',
+          status: doc.data().Status || ''
+        };
         data.push(entry);
       });
 
@@ -29,7 +37,7 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchHistoryFromFirestore();
-    }, 200); 
+    }, 200);
 
     return () => clearTimeout(timer); // Dọn dẹp timer khi component unmount
   }, []);
@@ -59,7 +67,7 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
           <Text style={styles.tableHeaderText}>Time</Text>
           <Text style={styles.tableHeaderText}>Status</Text>
         </View>
-        {loading ? ( // Hiển thị ActivityIndicator trong khi đang tải
+        {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#007bff" />
             <Text style={styles.loadingText}>Đang cập nhật dữ liệu...</Text>
@@ -81,10 +89,16 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
         )}
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, activeButton === 'DHDTMT17B' ? styles.activeButton : styles.inactiveButton]} onPress={() => handleButtonPress('DHDTMT17B')}>
+        <TouchableOpacity
+          style={[styles.button, activeButton === 'DHDTMT17B' ? styles.activeButton : styles.inactiveButton]}
+          onPress={() => handleButtonPress('DHDTMT17B')}
+        >
           <Text style={styles.buttonText}>DHDTMT17B</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, activeButton === 'History' ? styles.activeButton : styles.inactiveButton]} onPress={() => handleButtonPress('History')}>
+        <TouchableOpacity
+          style={[styles.button, activeButton === 'History' ? styles.activeButton : styles.inactiveButton]}
+          onPress={() => handleButtonPress('History')}
+        >
           <Text style={styles.buttonText}>HISTORY</Text>
         </TouchableOpacity>
       </View>
