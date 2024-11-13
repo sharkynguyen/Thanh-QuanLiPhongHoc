@@ -6,8 +6,8 @@ import firebase from '../firebaseConfig'; // Điều chỉnh việc nhập dựa
 import NetInfo from '@react-native-community/netinfo'; // Import NetInfo để kiểm tra trạng thái kết nối mạng
 
 const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [email, setEmail] = useState<string>('abc@gmail.com');
-  const [password, setPassword] = useState<string>('123456');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isConnected, setIsConnected] = useState<boolean | null>(null); // Trạng thái để lưu thông tin kết nối mạng
   const [isLoading, setIsLoading] = useState<boolean>(false); // Để điều khiển modal tải
   const [hasTimeoutOccurred, setHasTimeoutOccurred] = useState<boolean>(false); // Theo dõi xem thời gian chờ có xảy ra hay không
@@ -136,10 +136,10 @@ const Login: React.FC<{ navigation: any }> = ({ navigation }) => {
         animationType="none" // Không có hoạt ảnh
         onRequestClose={() => setIsLoading(false)}
       >
-        <View style={styles.modalBackground}> 
-          <View style={styles.activityIndicatorWrapper}> 
-            <ActivityIndicator size="large" color="#007bff" /> 
-            <Text style={styles.loadingText}>Đang kết nối...</Text> 
+        <View style={styles.modalBackground}>
+          <View style={styles.activityIndicatorWrapper}>
+            <ActivityIndicator size="large" color="#007bff" />
+            <Text style={styles.loadingText}>Đang kết nối...</Text>
           </View>
         </View>
       </Modal>
