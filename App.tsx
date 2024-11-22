@@ -4,10 +4,8 @@ import { NavigationContainer } from '@react-navigation/native'; // Nhập Naviga
 import { createStackNavigator } from '@react-navigation/stack'; // Nhập createStackNavigator để sử dụng điều hướng theo ngăn xếp
 import Login from './screens/Login'; // Nhập thành phần màn hình Đăng nhập
 import IntermediateScreen from './screens/IntermediateScreen'; // Nhập thành phần màn hình Trung gian
-import ClassSelection from './screens/ClassSelection'; // Nhập thành phần màn hình Chọn lớp
 import DAKTNC from './screens/DAKTNC'; // Nhập thành phần màn hình DAKTNC
 import History from './screens/History'; // Nhập thành phần màn hình Lịch sử
-
 // Tạo một thể hiện Stack Navigator
 const Stack = createStackNavigator();
 
@@ -28,10 +26,6 @@ const App: React.FC = () => {
         <Stack.Screen 
           name="NHÓM 6 - DHDTMT17B" 
           component={IntermediateScreen} 
-        />
-        <Stack.Screen 
-          name="ClassSelection" 
-          component={ClassSelection} 
         />
         <Stack.Screen 
           name="NHÓM 6" 
